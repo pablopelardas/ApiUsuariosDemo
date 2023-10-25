@@ -6,12 +6,12 @@ const menuItems = [
   {
     label: 'Home',
     icon: 'pi pi-fw pi-home',
-    route: 'home'
+    route: '/'
   },
   {
     label: 'Usuarios',
     icon: 'pi pi-fw pi-user',
-    route: 'users'
+    route: '/users'
   }
 ]
 </script>
@@ -26,12 +26,7 @@ const menuItems = [
           </div>
           <Menubar :model="menuItems">
             <template #item="{ item }">
-              <RouterLink
-                :to="{
-                  name: item.route
-                }"
-                ><i :class="item.icon"></i>{{ item.label }}</RouterLink
-              >
+              <RouterLink :to="item.route">{{ item.label }}</RouterLink>
             </template>
           </Menubar>
         </nav>
@@ -48,7 +43,7 @@ const menuItems = [
 
 .app {
   &-header {
-    background-color: #f6f6f6;
+    background-color: $nav-color;
     color: #363636;
     padding: 1rem;
     margin-bottom: 2rem;
@@ -66,7 +61,7 @@ const menuItems = [
         }
       }
       .p-menubar {
-        background-color: #f6f6f6;
+        background-color: $nav-color;
         border: none;
         font-family: $font-medium;
         ul.p-menubar-root-list {
@@ -83,7 +78,6 @@ const menuItems = [
               background-color: transparent;
             }
             a {
-              color: #363636;
               text-decoration: none;
               &:hover {
                 text-decoration: underline;
