@@ -6,12 +6,12 @@ const menuItems = [
   {
     label: 'Home',
     icon: 'pi pi-fw pi-home',
-    route: '/'
+    route: 'home'
   },
   {
     label: 'Usuarios',
     icon: 'pi pi-fw pi-user',
-    route: '/users'
+    route: 'users'
   }
 ]
 </script>
@@ -26,7 +26,12 @@ const menuItems = [
           </div>
           <Menubar :model="menuItems">
             <template #item="{ item }">
-              <RouterLink :to="item.route">{{ item.label }}</RouterLink>
+              <RouterLink
+                :to="{
+                  name: item.route
+                }"
+                >{{ item.label }}</RouterLink
+              >
             </template>
           </Menubar>
         </nav>

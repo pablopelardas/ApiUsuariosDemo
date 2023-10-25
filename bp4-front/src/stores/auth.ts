@@ -3,7 +3,8 @@ import type { AuthState } from './types'
 
 export const useAuthStore = defineStore('AuthStore', {
   state: (): AuthState => ({
-    account: null
+    account: null,
+    token: null
   }),
   actions: {
     async login() {},
