@@ -11,13 +11,17 @@ const error = computed(() => appStore.error)
 
 <template>
   <div class="wrapper">
-    <div v-if="isLoading" class="wrapper-loader">
-      <ProgressSpinner />
-    </div>
-    <div v-else-if="error" class="wrapper-error">
-      <h1>Algo ocurrió</h1>
-      <p>{{ error }}</p>
-    </div>
+    <slot name="loader" v-if="isLoading">
+      <div v-if="isLoading" class="wrapper-loader">
+        <ProgressSpinner />
+      </div>
+    </slot>
+    <slot name="error" v-else-if="error">
+      <div class="wrapper-error">
+        <h1>Algo ocurrió</h1>
+        <p>{{ error }}</p>
+      </div>
+    </slot>
     <slot v-else />
   </div>
 </template>
