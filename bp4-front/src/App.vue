@@ -1,85 +1,108 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue'
+import Menubar from 'primevue/menubar'
+
+const menuItems = [
+  {
+    label: 'Home',
+    icon: 'pi pi-fw pi-home',
+    route: 'home'
+  },
+  {
+    label: 'Usuarios',
+    icon: 'pi pi-fw pi-user',
+    route: 'users'
+  }
+]
 </script>
 
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
-
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-
-      <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
-      </nav>
+  <main class="app">
+    <header class="app-header">
+      <div class="container">
+        <nav>
+          <div class="logo">
+            <img src="./assets/logo.svg" alt="Logo GPE" />
+          </div>
+          <Menubar :model="menuItems">
+            <template #item="{ item }">
+              <RouterLink
+                :to="{
+                  name: item.route
+                }"
+                ><i :class="item.icon"></i>{{ item.label }}</RouterLink
+              >
+            </template>
+          </Menubar>
+        </nav>
+      </div>
+    </header>
+    <div class="container">
+      <RouterView />
     </div>
-  </header>
-
-  <RouterView />
+  </main>
 </template>
 
-<style scoped>
-header {
-  line-height: 1.5;
-  max-height: 100vh;
-}
+<style lang="scss">
+@import '@/assets/scss/variables.scss';
 
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
-}
-
-nav {
-  width: 100%;
-  font-size: 12px;
-  text-align: center;
-  margin-top: 2rem;
-}
-
-nav a.router-link-exact-active {
-  color: var(--color-text);
-}
-
-nav a.router-link-exact-active:hover {
-  background-color: transparent;
-}
-
-nav a {
-  display: inline-block;
-  padding: 0 1rem;
-  border-left: 1px solid var(--color-border);
-}
-
-nav a:first-of-type {
-  border: 0;
-}
-
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
+.app {
+  &-header {
+    background-color: #f6f6f6;
+    color: #363636;
+    padding: 1rem;
+    margin-bottom: 2rem;
+    nav {
+      display: flex;
+      justify-content: space-between;
+      .logo {
+        display: flex;
+        align-items: center;
+        img {
+          width: 50px;
+          @media (max-width: 450px) {
+            width: 50px;
+          }
+        }
+      }
+      .p-menubar {
+        background-color: #f6f6f6;
+        border: none;
+        font-family: $font-medium;
+        ul.p-menubar-root-list {
+          align-items: center;
+          margin-right: 1rem;
+          .p-menuitem.p-focus {
+            .p-menuitem-content {
+              background-color: transparent;
+            }
+          }
+          .p-menuitem-content {
+            margin-left: 1rem;
+            &:hover {
+              background-color: transparent;
+            }
+            a {
+              color: #363636;
+              text-decoration: none;
+              &:hover {
+                text-decoration: underline;
+              }
+            }
+          }
+        }
+        .p-menubar-end {
+          @media screen and (max-width: 500px) {
+            display: none;
+          }
+        }
+      }
+    }
   }
-
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
-
-  nav {
-    text-align: left;
-    margin-left: -1rem;
-    font-size: 1rem;
-
-    padding: 1rem 0;
-    margin-top: 1rem;
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
   }
 }
 </style>
