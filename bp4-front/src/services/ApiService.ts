@@ -20,7 +20,7 @@ export default class ApiService {
     return response.data
   }
   async updateUser(user: User) {
-    const response = await axiosInstance.put<User>('/api/users', user)
+    const response = await axiosInstance.put<User>(`/api/users/${user.id}`, user)
     return response.data
   }
   async deleteUser(id: number) {

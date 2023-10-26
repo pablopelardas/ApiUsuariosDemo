@@ -77,7 +77,7 @@ const onConfirm = () => {
     if (user.id === -1) {
       store.createUser(user)
     } else {
-      // store.updateUser(user)
+      store.updateUser(user)
     }
   }
 }
@@ -90,7 +90,7 @@ const onCancel = () => {
 const onDelete = () => {
   showModal.value = false
   showDeleteConfirmation.value = false
-  console.log('delete')
+  store.deleteUser(selectedUser.value!.id)
 }
 </script>
 

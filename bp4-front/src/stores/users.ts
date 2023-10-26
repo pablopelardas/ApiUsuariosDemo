@@ -35,7 +35,29 @@ export const useUsersStore = defineStore('UsersStore', {
         await apiService.createUser(user)
         await this.loadUsers()
       } catch (error) {
-        appStore.setError('Error conectando con el servicio de usuarios')
+        appStore.setError('Error al crear el usuario')
+      } finally {
+        appStore.setLoading(false)
+      }
+    },
+    async updateUser(user: User) {
+      try {
+        appStore.setLoading(true)
+        await apiService.updateUser(user)
+        await this.loadUsers()
+      } catch (error) {
+        appStore.setError('Error al actualizar el usuario')
+      } finally {
+        appStore.setLoading(false)
+      }
+    },
+    async deleteUser(id: number) {
+      try {
+        appStore.setLoading(true)
+        await apiService.deleteUser(id)
+        await this.loadUsers()
+      } catch (error) {
+        appStore.setError('Error al eliminar el usuario')
       } finally {
         appStore.setLoading(false)
       }
