@@ -80,3 +80,11 @@ Iniciar el servidor
   npm run dev
 ```
 También podes hacer un `npm run build` y `npm run preview`
+
+----
+
+![image](https://github.com/pablopelardas/ApiUsuariosDemo/assets/31576799/91d7158b-018d-4d1a-ae08-55d72a287cc7)
+![image](https://github.com/pablopelardas/ApiUsuariosDemo/assets/31576799/8412b055-872f-4f7f-8a7c-2a0d679db17d)
+![image](https://github.com/pablopelardas/ApiUsuariosDemo/assets/31576799/6a028aee-defd-49b1-9dca-c028f5fd3864)
+
+
