@@ -4,9 +4,9 @@ import { body, validationResult } from "express-validator";
 
 import * as userService from "./service";
 
-export const userRouter = express.Router();
+export const userController = express.Router();
 
-userRouter.get("/", async (req: Request, res: Response) => {
+userController.get("/", async (req: Request, res: Response) => {
   try {
     const users = await userService.getAll();
     return res.status(200).json(users);
@@ -15,7 +15,7 @@ userRouter.get("/", async (req: Request, res: Response) => {
   }
 });
 
-userRouter.get("/:id", async (req: Request, res: Response) => {
+userController.get("/:id", async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     const user = await userService.getById(parseInt(id));
@@ -28,7 +28,7 @@ userRouter.get("/:id", async (req: Request, res: Response) => {
   }
 });
 
-userRouter.get("/search/:query", async (req: Request, res: Response) => {
+userController.get("/search/:query", async (req: Request, res: Response) => {
   try {
     const { query } = req.params;
     const users = await userService.search(query);
@@ -43,41 +43,53 @@ const validations: any = [
   body("lastnames").isString().notEmpty(),
   body("email").isEmail().notEmpty(),
   body("birthdate").isISO8601().notEmpty(),
-  body("cuit").isString().notEmpty(),
+  body("cuit")
+    .matches(/^\d{2}-\d{8}-\d{1}$/)
+    .notEmpty(),
   body("cellphone").isString().notEmpty(),
   body("address").isString().notEmpty(),
 ];
 
-userRouter.post("/", ...validations, async (req: Request, res: Response) => {
-  try {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({
-        error: errors.array(),
-      });
+userController.post(
+  "/",
+  ...validations,
+  async (req: Request, res: Response) => {
+    try {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).json({
+          error: errors.array(),
+        });
+      }
+      const user = await userService.insert(req.body);
+      return res.status(201).json(user);
+    } catch (error: any) {
+      return res.status(500).json({ error: error.message });
     }
-    const user = await userService.insert(req.body);
-    return res.status(201).json(user);
-  } catch (error: any) {
-    return res.status(500).json({ error: error.message });
   }
-});
+);
 
-userRouter.put("/:id", ...validations, async (req: Request, res: Response) => {
-  try {
-    const { id } = req.params;
-    const user = await userService.getById(parseInt(id));
-    if (!user) {
-      return res.status(404).json({ error: "No existe un usuario con ese id" });
+userController.put(
+  "/:id",
+  ...validations,
+  async (req: Request, res: Response) => {
+    try {
+      const { id } = req.params;
+      const user = await userService.getById(parseInt(id));
+      if (!user) {
+        return res
+          .status(404)
+          .json({ error: "No existe un usuario con ese id" });
+      }
+      const updatedUser = await userService.update(parseInt(id), req.body);
+      return res.status(200).json(updatedUser);
+    } catch (error: any) {
+      return res.status(500).json({ error: error.message });
     }
-    const updatedUser = await userService.update(parseInt(id), req.body);
-    return res.status(200).json(updatedUser);
-  } catch (error: any) {
-    return res.status(500).json({ error: error.message });
   }
-});
+);
 
-userRouter.delete("/:id", async (req: Request, res: Response) => {
+userController.delete("/:id", async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     const user = await userService.getById(parseInt(id));

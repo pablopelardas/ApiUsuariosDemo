@@ -35,12 +35,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.userRouter = void 0;
+exports.userController = void 0;
 const express_1 = __importDefault(require("express"));
 const express_validator_1 = require("express-validator");
 const userService = __importStar(require("./service"));
-exports.userRouter = express_1.default.Router();
-exports.userRouter.get("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.userController = express_1.default.Router();
+exports.userController.get("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const users = yield userService.getAll();
         return res.status(200).json(users);
@@ -49,7 +49,7 @@ exports.userRouter.get("/", (req, res) => __awaiter(void 0, void 0, void 0, func
         return res.status(500).json({ error: error.message });
     }
 }));
-exports.userRouter.get("/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.userController.get("/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { id } = req.params;
         const user = yield userService.getById(parseInt(id));
@@ -62,7 +62,7 @@ exports.userRouter.get("/:id", (req, res) => __awaiter(void 0, void 0, void 0, f
         return res.status(500).json({ error: error.message });
     }
 }));
-exports.userRouter.get("/search/:query", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.userController.get("/search/:query", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { query } = req.params;
         const users = yield userService.search(query);
@@ -77,11 +77,13 @@ const validations = [
     (0, express_validator_1.body)("lastnames").isString().notEmpty(),
     (0, express_validator_1.body)("email").isEmail().notEmpty(),
     (0, express_validator_1.body)("birthdate").isISO8601().notEmpty(),
-    (0, express_validator_1.body)("cuit").isString().notEmpty(),
+    (0, express_validator_1.body)("cuit")
+        .matches(/^\d{2}-\d{8}-\d{1}$/)
+        .notEmpty(),
     (0, express_validator_1.body)("cellphone").isString().notEmpty(),
     (0, express_validator_1.body)("address").isString().notEmpty(),
 ];
-exports.userRouter.post("/", ...validations, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.userController.post("/", ...validations, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const errors = (0, express_validator_1.validationResult)(req);
         if (!errors.isEmpty()) {
@@ -96,12 +98,14 @@ exports.userRouter.post("/", ...validations, (req, res) => __awaiter(void 0, voi
         return res.status(500).json({ error: error.message });
     }
 }));
-exports.userRouter.put("/:id", ...validations, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.userController.put("/:id", ...validations, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { id } = req.params;
         const user = yield userService.getById(parseInt(id));
         if (!user) {
-            return res.status(404).json({ error: "No existe un usuario con ese id" });
+            return res
+                .status(404)
+                .json({ error: "No existe un usuario con ese id" });
         }
         const updatedUser = yield userService.update(parseInt(id), req.body);
         return res.status(200).json(updatedUser);
@@ -110,7 +114,7 @@ exports.userRouter.put("/:id", ...validations, (req, res) => __awaiter(void 0, v
         return res.status(500).json({ error: error.message });
     }
 }));
-exports.userRouter.delete("/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.userController.delete("/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { id } = req.params;
         const user = yield userService.getById(parseInt(id));
