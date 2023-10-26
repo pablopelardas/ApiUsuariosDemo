@@ -10,6 +10,7 @@ import InputText from 'primevue/inputtext'
 import { useUsersStore } from '@/stores/users'
 import LoadWrapper from '@/components/LoadWrapper.vue'
 import ModalDialog from '@/components/ModalDialog.vue'
+import UserForm from '@/components/UserForm.vue'
 import type { User } from '@/types'
 
 interface RowEvent {
@@ -24,6 +25,7 @@ const selectedItem = ref(null)
 const selectedUser = ref<User>()
 const showModal = ref(false)
 const showDeleteConfirmation = ref(false)
+const userForm = ref<typeof UserForm>()
 
 const filters = ref({
   global: {
@@ -59,11 +61,15 @@ const onAdd = () => {
 }
 
 const onConfirm = () => {
-  console.log('confirm')
+  if (userForm.value?.validate()) {
+    showModal.value = false
+    console.log(userForm.value?.localUser)
+  }
 }
 
 const onCancel = () => {
   console.log('cancel')
+  showModal.value = false
 }
 
 const onDelete = () => {
@@ -126,7 +132,6 @@ const onDelete = () => {
         v-model:showModal="showModal"
         :confirmText="selectedUser ? 'Editar' : 'Crear'"
         :cancelText="selectedUser ? 'Cancelar' : 'Cerrar'"
-        @update:show-modal="showModal = $event"
         @confirm="onConfirm"
         @cancel="onCancel"
       >
@@ -140,7 +145,9 @@ const onDelete = () => {
             @click="showDeleteConfirmation = true"
           />
         </div>
-        <div class="modal__body"></div>
+        <div class="modal__body">
+          <UserForm ref="userForm" :user="selectedUser!" />
+        </div>
       </ModalDialog>
       <ModalDialog
         v-model:showModal="showDeleteConfirmation"
@@ -183,6 +190,14 @@ const onDelete = () => {
         margin: 1rem 0;
       }
     }
+  }
+}
+.modal {
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
   }
 }
 </style>

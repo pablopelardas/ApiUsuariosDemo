@@ -21,12 +21,10 @@ defineProps({
 const emit = defineEmits(['update:showModal', 'confirm', 'cancel'])
 
 const onCancel = () => {
-  emit('update:showModal', false)
   emit('cancel')
 }
 
 const onConfirm = () => {
-  emit('update:showModal', false)
   emit('confirm')
 }
 </script>
