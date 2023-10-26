@@ -12,7 +12,7 @@ type User = {
 };
 
 export const getAll = async (): Promise<User[]> => {
-  return await prisma.users.findMany({
+  return await prisma.user.findMany({
     select: {
       id: true,
       names: true,
@@ -27,7 +27,7 @@ export const getAll = async (): Promise<User[]> => {
 };
 
 export const getById = async (id: number): Promise<User | null> => {
-  return await prisma.users.findUnique({
+  return await prisma.user.findUnique({
     where: {
       id,
     },
@@ -45,7 +45,7 @@ export const getById = async (id: number): Promise<User | null> => {
 };
 
 export const search = async (query: string): Promise<User[]> => {
-  return await prisma.users.findMany({
+  return await prisma.user.findMany({
     where: {
       OR: [
         {
@@ -94,7 +94,7 @@ export const search = async (query: string): Promise<User[]> => {
 };
 
 export const insert = async (user: User): Promise<User> => {
-  return await prisma.users.create({
+  return await prisma.user.create({
     data: {
       names: user.names,
       lastnames: user.lastnames,
@@ -118,7 +118,7 @@ export const insert = async (user: User): Promise<User> => {
 };
 
 export const update = async (id: number, user: User): Promise<User | null> => {
-  return await prisma.users.update({
+  return await prisma.user.update({
     where: {
       id,
     },
@@ -145,7 +145,7 @@ export const update = async (id: number, user: User): Promise<User | null> => {
 };
 
 export const remove = async (id: number): Promise<User | null> => {
-  return await prisma.users.delete({
+  return await prisma.user.delete({
     where: {
       id,
     },
