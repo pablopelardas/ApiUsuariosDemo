@@ -1,0 +1,41 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`UserForm > should render correctly 1`] = `
+"<div class=\\"user-form\\">
+  <div class=\\"field\\">
+    <div class=\\"field-header\\"><label for=\\"names\\">Nombres</label>
+      <!--v-if-->
+    </div><input class=\\"p-inputtext p-component\\" data-pc-name=\\"inputtext\\" data-pc-section=\\"root\\" id=\\"names\\">
+  </div>
+  <div class=\\"field\\">
+    <div class=\\"field-header\\"><label for=\\"lastnames\\">Apellidos</label>
+      <!--v-if-->
+    </div><input class=\\"p-inputtext p-component\\" data-pc-name=\\"inputtext\\" data-pc-section=\\"root\\" id=\\"lastnames\\">
+  </div>
+  <div class=\\"field\\">
+    <div class=\\"field-header\\"><label for=\\"email\\">Email</label>
+      <!--v-if-->
+    </div><input class=\\"p-inputtext p-component\\" data-pc-name=\\"inputtext\\" data-pc-section=\\"root\\" id=\\"email\\">
+  </div>
+  <div class=\\"field\\">
+    <div class=\\"field-header\\"><label for=\\"cuit\\">CUIT</label>
+      <!--v-if-->
+    </div><input class=\\"p-inputtext p-component\\" data-pc-name=\\"inputtext\\" data-pc-section=\\"root\\" id=\\"cuit\\">
+  </div>
+  <div class=\\"field\\">
+    <div class=\\"field-header\\"><label for=\\"birthdate\\">Fecha de nacimiento</label>
+      <!--v-if-->
+    </div><input class=\\"p-inputtext p-component\\" data-pc-name=\\"inputtext\\" data-pc-section=\\"root\\" id=\\"birthdate\\">
+  </div>
+  <div class=\\"field\\">
+    <div class=\\"field-header\\"><label for=\\"residence\\">Residencia</label>
+      <!--v-if-->
+    </div><input class=\\"p-inputtext p-component\\" data-pc-name=\\"inputtext\\" data-pc-section=\\"root\\" id=\\"residence\\">
+  </div>
+  <div class=\\"field\\">
+    <div class=\\"field-header\\"><label for=\\"cellphone\\">Celular</label>
+      <!--v-if-->
+    </div><input class=\\"p-inputtext p-component\\" data-pc-name=\\"inputtext\\" data-pc-section=\\"root\\" id=\\"cellphone\\">
+  </div>
+</div>"
+`;

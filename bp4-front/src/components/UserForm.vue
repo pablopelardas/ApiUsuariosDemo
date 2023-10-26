@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import InputField from '@/components/form-controls/InputField.vue'
-import { reactive } from 'vue'
+import { reactive, ref, watch } from 'vue'
 
 const props = defineProps({
   user: {
@@ -10,6 +10,7 @@ const props = defineProps({
 })
 
 const localUser = reactive({ ...props.user })
+const triedToSubmit = ref(false)
 
 const errors = reactive<Record<string, string>>({
   names: '',
@@ -25,6 +26,7 @@ const validate = () => {
   Object.keys(errors).forEach((key) => {
     errors[key] = ''
   })
+  triedToSubmit.value = true
   const requiredFields = [
     'names',
     'lastnames',
@@ -57,6 +59,14 @@ const validate = () => {
   return !requiredFields.some((field) => errors[field])
 }
 
+watch(
+  localUser,
+  () => {
+    if (triedToSubmit.value) validate()
+  },
+  { deep: true }
+)
+
 defineExpose({
   validate,
   localUser
@@ -65,54 +75,32 @@ defineExpose({
 
 <template>
   <div class="user-form">
-    <InputField
-      v-model="localUser.names"
-      label="Nombres"
-      id="names"
-      :error="errors.names"
-      errorMessage="El nombre es requerido"
-    />
+    <InputField v-model="localUser.names" label="Nombres" id="names" :error="errors.names" />
     <InputField
       v-model="localUser.lastnames"
       label="Apellidos"
       id="lastnames"
       :error="errors.lastnames"
-      errorMessage="El apellido es requerido"
     />
-    <InputField
-      v-model="localUser.email"
-      label="Email"
-      id="email"
-      :error="errors.email"
-      errorMessage="El email es requerido"
-    />
-    <InputField
-      v-model="localUser.cuit"
-      label="CUIT"
-      id="cuit"
-      :error="errors.cuit"
-      errorMessage="El CUIT es requerido"
-    />
+    <InputField v-model="localUser.email" label="Email" id="email" :error="errors.email" />
+    <InputField v-model="localUser.cuit" label="CUIT" id="cuit" :error="errors.cuit" />
     <InputField
       v-model="localUser.birthdate"
       label="Fecha de nacimiento"
       id="birthdate"
       :error="errors.birthdate"
-      errorMessage="La fecha de nacimiento es requerida"
     />
     <InputField
       v-model="localUser.residence"
       label="Residencia"
       id="residence"
       :error="errors.residence"
-      errorMessage="La residencia es requerida"
     />
     <InputField
       v-model="localUser.cellphone"
       label="Celular"
       id="cellphone"
       :error="errors.cellphone"
-      errorMessage="El celular es requerido"
     />
   </div>
 </template>
