@@ -50,7 +50,13 @@ Instalar dependencias
 ```bash
   npm install
 ```
+Iniciar migraciones y seeders base de datos
 
+```bash
+  npm run prisma:db:push
+  npm run prisma:generate
+  npm run prisma:db:seed
+```
 
 Iniciar el servidor
 
