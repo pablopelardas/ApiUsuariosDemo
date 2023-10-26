@@ -18,7 +18,7 @@ defineProps({
   }
 })
 
-const emit = defineEmits(['update:showModal', 'confirm', 'cancel'])
+const emit = defineEmits(['confirm', 'cancel'])
 
 const onCancel = () => {
   emit('cancel')

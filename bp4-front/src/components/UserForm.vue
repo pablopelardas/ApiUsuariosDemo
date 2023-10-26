@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import InputField from '@/components/form-controls/InputField.vue'
 import { reactive, ref, watch } from 'vue'
+import InputField from '@/components/form-controls/InputField.vue'
+import DateField from './form-controls/DateField.vue'
 
 const props = defineProps({
   user: {
@@ -18,7 +19,7 @@ const errors = reactive<Record<string, string>>({
   email: '',
   cuit: '',
   birthdate: '',
-  residence: '',
+  address: '',
   cellphone: ''
 })
 
@@ -33,7 +34,7 @@ const validate = () => {
     'email',
     'cuit',
     'birthdate',
-    'residence',
+    'address',
     'cellphone'
   ]
   requiredFields.forEach((field) => {
@@ -84,17 +85,17 @@ defineExpose({
     />
     <InputField v-model="localUser.email" label="Email" id="email" :error="errors.email" />
     <InputField v-model="localUser.cuit" label="CUIT" id="cuit" :error="errors.cuit" />
-    <InputField
+    <DateField
       v-model="localUser.birthdate"
       label="Fecha de nacimiento"
       id="birthdate"
       :error="errors.birthdate"
     />
     <InputField
-      v-model="localUser.residence"
-      label="Residencia"
-      id="residence"
-      :error="errors.residence"
+      v-model="localUser.address"
+      label="Domicilio"
+      id="address"
+      :error="errors.address"
     />
     <InputField
       v-model="localUser.cellphone"

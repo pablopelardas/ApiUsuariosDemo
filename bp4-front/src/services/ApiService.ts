@@ -12,7 +12,19 @@ export default class ApiService {
   }
   // methods
   async getUsers() {
-    const response = await axiosInstance.get<User[]>('/users', {})
+    const response = await axiosInstance.get<User[]>('/api/users', {})
+    return response.data
+  }
+  async createUser(user: User) {
+    const response = await axiosInstance.post<User>('/api/users', user)
+    return response.data
+  }
+  async updateUser(user: User) {
+    const response = await axiosInstance.put<User>('/api/users', user)
+    return response.data
+  }
+  async deleteUser(id: number) {
+    const response = await axiosInstance.delete<User>(`/api/users/${id}`)
     return response.data
   }
 }

@@ -4,7 +4,7 @@ export interface User {
   lastnames: string
   birthdate: Date | string
   cuit: string
-  residence: string
+  address: string
   cellphone: string
   email: string
 }

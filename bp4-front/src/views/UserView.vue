@@ -36,8 +36,15 @@ const filters = ref({
 
 const isNewUser = computed(() => selectedUser.value?.id === -1)
 
+const mappedUsers = computed(() => {
+  return store.users.map((user) => ({
+    ...user,
+    birthdate: new Date(user.birthdate).toLocaleDateString('es-AR')
+  }))
+})
+
 const onRowSelect = (event: RowEvent) => {
-  selectedUser.value = event.data
+  selectedUser.value = store.users.find((user) => user.id === event.data.id)!
   showModal.value = true
 }
 
@@ -52,8 +59,8 @@ const onAdd = () => {
     lastnames: '',
     email: '',
     cuit: '',
-    birthdate: '',
-    residence: '',
+    birthdate: new Date(),
+    address: '',
     cellphone: ''
   }
   selectedItem.value = null
@@ -62,8 +69,16 @@ const onAdd = () => {
 
 const onConfirm = () => {
   if (userForm.value?.validate()) {
+    const user = userForm.value?.localUser
     showModal.value = false
-    console.log(userForm.value?.localUser)
+    const birthdate = new Date(user.birthdate)
+    birthdate.setHours(0, 0, 0, 0)
+    user.birthdate = birthdate.toISOString()
+    if (user.id === -1) {
+      store.createUser(user)
+    } else {
+      // store.updateUser(user)
+    }
   }
 }
 
@@ -95,7 +110,7 @@ const onDelete = () => {
       <div class="table">
         <DataTable
           v-model:selection="selectedItem"
-          :value="store.users"
+          :value="mappedUsers"
           selectionMode="single"
           dataKey="id"
           :metaKeySelection="false"
@@ -113,7 +128,7 @@ const onDelete = () => {
             'email',
             'cuit',
             'birthdate',
-            'residence',
+            'address',
             'cellphone'
           ]"
         >
@@ -124,7 +139,7 @@ const onDelete = () => {
           <Column field="email" sortable header="Correo"></Column>
           <Column field="cuit" sortable header="CUIT"></Column>
           <Column field="birthdate" sortable header="Fecha Nacimiento"></Column>
-          <Column field="residence" sortable header="Domicilio"></Column>
+          <Column field="address" sortable header="Domicilio"></Column>
           <Column field="cellphone" sortable header="Celular"></Column>
         </DataTable>
       </div>
@@ -148,6 +163,12 @@ const onDelete = () => {
         <div class="modal__body">
           <UserForm ref="userForm" :user="selectedUser!" />
         </div>
+        <template #footer>
+          <div class="p-d-flex p-jc-end">
+            <Button :label="isNewUser ? 'Cerrar' : 'Cancelar'" @click="onCancel" />
+            <Button :label="isNewUser ? 'Crear' : 'Editar'" @click="onConfirm" />
+          </div>
+        </template>
       </ModalDialog>
       <ModalDialog
         v-model:showModal="showDeleteConfirmation"
