@@ -84,6 +84,7 @@ const menuItems = [
             }
             a {
               text-decoration: none;
+              color: $primary;
               &:hover {
                 text-decoration: underline;
               }

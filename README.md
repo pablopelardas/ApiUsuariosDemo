@@ -15,7 +15,7 @@ Este repositorio cuenta con dos proyectos adentro:
 
 Para correr este proyecto vas a necesitar tener un archivo .env con las siguientes variable de entorno
 
-`DATABASE_URL` : Url de la base de datos MYSQL (si quisieras utilizar otra hay que modificar el archivo schema.prisma)
+`DATABASE_URL` : Url de la base de datos MYSQL (si quisieras utilizar otra hay que modificar el archivo schema.prisma) FORMATO `mysql://USER:PASSWORD@HOST:PORT/DATABASE`
 
 `CLIENT` : Url del frontend (PARA CORS)
 
