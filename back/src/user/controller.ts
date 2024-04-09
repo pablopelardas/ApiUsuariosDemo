@@ -1,3 +1,11 @@
+import express from "express";
+import type { Request, Response } from "express";
+import { body, validationResult } from "express-validator";
+import * as userService from "./service";
+import {buildReqMetadata, logApp, logError} from "../logs/service";
+
+export const userController = express.Router();
+
 /**
  * @swagger
  * components:
@@ -40,17 +48,11 @@
  *           description: Fecha y hora de última actualización del usuario en formato ISO 8601.
  */
 
-import express from "express";
-import type { Request, Response } from "express";
-import { body, validationResult } from "express-validator";
-import * as userService from "./service";
-
-export const userController = express.Router();
-
 /**
  * @swagger
  * /api/users:
  *   get:
+ *     tags: [Users]
  *     summary: Obtener todos los usuarios
  *     responses:
  *       200:
@@ -69,6 +71,7 @@ userController.get("/", async (req: Request, res: Response) => {
     const users = await userService.getAll();
     return res.status(200).json(users);
   } catch (error: any) {
+    logError("Error al obtener usuarios", {...buildReqMetadata(req), error: error.message });
     return res.status(500).json({ error: error.message });
   }
 });
@@ -77,6 +80,7 @@ userController.get("/", async (req: Request, res: Response) => {
  * @swagger
  * /api/users/{id}:
  *   get:
+ *     tags: [Users]
  *     summary: Obtener un usuario por su id
  *     parameters:
  *       - in: path
@@ -98,14 +102,15 @@ userController.get("/", async (req: Request, res: Response) => {
  *         description: Error interno del servidor
  */
 userController.get("/:id", async (req: Request, res: Response) => {
+  const { id } = req.params;
   try {
-    const { id } = req.params;
     const user = await userService.getById(parseInt(id));
     if (!user) {
       return res.status(404).json({ error: "No existe un usuario con ese id" });
     }
     return res.status(200).json(user);
   } catch (error: any) {
+    logError("Error al obtener usuario con id" + id, {...buildReqMetadata(req), error: error.message });
     return res.status(500).json({ error: error.message });
   }
 });
@@ -114,6 +119,7 @@ userController.get("/:id", async (req: Request, res: Response) => {
  * @swagger
  * /api/users/search/{query}:
  *   get:
+ *     tags: [Users]
  *     summary: Buscar usuarios por nombre o apellido
  *     parameters:
  *       - in: path
@@ -135,11 +141,12 @@ userController.get("/:id", async (req: Request, res: Response) => {
  *         description: Error interno del servidor
  */
 userController.get("/search/:query", async (req: Request, res: Response) => {
+  const { query } = req.params;
   try {
-    const { query } = req.params;
     const users = await userService.search(query);
     return res.status(200).json(users);
   } catch (error: any) {
+    logError("Error al buscar usuarios con query: " + query, {...buildReqMetadata(req), error: error.message });
     return res.status(500).json({ error: error.message });
   }
 });
@@ -148,6 +155,7 @@ userController.get("/search/:query", async (req: Request, res: Response) => {
  * @swagger
  * /api/users:
  *   post:
+ *     tags: [Users]
  *     summary: Crear un nuevo usuario
  *     requestBody:
  *       required: true
@@ -213,8 +221,10 @@ userController.post(
         });
       }
       const user = await userService.insert(req.body);
+      logApp("Usuario creado exitosamente", {...buildReqMetadata(req)});
       return res.status(201).json(user);
     } catch (error: any) {
+      logError("Error al crear usuario", {...buildReqMetadata(req), error: error.message });
       return res.status(500).json({ error: error.message });
     }
   }
@@ -224,6 +234,7 @@ userController.post(
  * @swagger
  * /api/users/{id}:
  *   put:
+ *     tags: [Users]
  *     summary: Actualizar un usuario existente
  *     parameters:
  *       - in: path
@@ -279,8 +290,8 @@ userController.put(
   "/:id",
   ...validations,
   async (req: Request, res: Response) => {
+    const { id } = req.params;
     try {
-      const { id } = req.params;
       const user = await userService.getById(parseInt(id));
       if (!user) {
         return res
@@ -288,8 +299,10 @@ userController.put(
           .json({ error: "No existe un usuario con ese id" });
       }
       const updatedUser = await userService.update(parseInt(id), req.body);
+      logApp(`Usuario con id ${id} actualizado exitosamente`, {...buildReqMetadata(req)});
       return res.status(200).json(updatedUser);
     } catch (error: any) {
+      logError("Error al actualizar usuario con id" + id, {...buildReqMetadata(req), error: error.message });
       return res.status(500).json({ error: error.message });
     }
   }
@@ -299,6 +312,7 @@ userController.put(
  * @swagger
  * /api/users/{id}:
  *   delete:
+ *     tags: [Users]
  *     summary: Eliminar un usuario existente
  *     parameters:
  *       - in: path
@@ -316,15 +330,17 @@ userController.put(
  *         description: Error interno del servidor
  */
 userController.delete("/:id", async (req: Request, res: Response) => {
+  const { id } = req.params;
   try {
-    const { id } = req.params;
     const user = await userService.getById(parseInt(id));
     if (!user) {
       return res.status(404).json({ error: "No existe un usuario con ese id" });
     }
     await userService.remove(parseInt(id));
+    logApp(`Usuario con id ${id} eliminado exitosamente`, {...buildReqMetadata(req)});
     return res.status(204).json();
   } catch (error: any) {
+    logError("Error al eliminar usuario con id" + id, {...buildReqMetadata(req), error: error.message });
     return res.status(500).json({ error: error.message });
   }
 });

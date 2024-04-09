@@ -30,7 +30,7 @@ const specs = swaggerJSDoc(swaggerOptions);
 
 app.use("/docs", swaggerUi.serve, swaggerUi.setup(specs));
 
-app.get("/", (req, res) => {
+app.get("/", (_, res) => {
   res.send("Ingrese a /api/users para utilizar la api");
 });
 
