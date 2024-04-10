@@ -61,6 +61,26 @@ export const useUsersStore = defineStore('UsersStore', {
       } finally {
         appStore.setLoading(false)
       }
+    },
+    async searchUsers(query: string) {
+      try {
+        appStore.setLoading(true)
+        if (!query) {
+          return await this.loadUsers()
+        }
+        this.users = await apiService.searchUsers(query)
+        this.users = this.users.map((user) => {
+          const birthdate = new Date(user.birthdate)
+          return {
+            ...user,
+            birthdate
+          }
+        })
+      } catch (error) {
+        appStore.setError('Error al buscar usuarios')
+      } finally {
+        appStore.setLoading(false)
+      }
     }
   }
 })

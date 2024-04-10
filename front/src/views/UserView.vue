@@ -1,17 +1,18 @@
 <script setup lang="ts">
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted, computed, watch } from 'vue'
 
-import { FilterMatchMode } from 'primevue/api'
 import DataTable from 'primevue/datatable'
 import Button from 'primevue/button'
 import Column from 'primevue/column'
 import InputText from 'primevue/inputtext'
 
 import { useUsersStore } from '@/stores/users'
+import { useAppStore } from '@/stores/app'
 import LoadWrapper from '@/components/LoadWrapper.vue'
 import ModalDialog from '@/components/ModalDialog.vue'
 import UserForm from '@/components/UserForm.vue'
 import type { User } from '@/types'
+import { debounce } from '@/helpers/debounce'
 
 interface RowEvent {
   originalEvent: PointerEvent
@@ -20,6 +21,7 @@ interface RowEvent {
 }
 
 const store = useUsersStore()
+const appStore = useAppStore()
 
 const selectedItem = ref(null)
 const selectedUser = ref<User>()
@@ -27,12 +29,16 @@ const showModal = ref(false)
 const showDeleteConfirmation = ref(false)
 const userForm = ref<typeof UserForm>()
 
-const filters = ref({
-  global: {
-    value: null,
-    matchMode: FilterMatchMode.CONTAINS
-  }
-})
+const filterTerm = ref('')
+
+watch(
+  filterTerm,
+  debounce(async () => {
+    appStore.loading = true
+    await store.searchUsers(filterTerm.value)
+    appStore.loading = false
+  }, 500)
+)
 
 const isNewUser = computed(() => selectedUser.value?.id === -1)
 
@@ -102,7 +108,7 @@ const onDelete = () => {
         <div class="header__controls">
           <span class="p-input-icon-left">
             <i class="pi pi-search" />
-            <InputText v-model="filters['global'].value" placeholder="Buscar" />
+            <InputText v-model="filterTerm" placeholder="Buscar" />
           </span>
           <Button label="Agregar" icon="pi pi-plus" @click="onAdd" />
         </div>
@@ -120,17 +126,6 @@ const onDelete = () => {
           :rows="10"
           :rowsPerPageOptions="[10, 25, 50]"
           sort-mode="multiple"
-          v-model:filters="filters"
-          :global-filter-fields="[
-            'id',
-            'names',
-            'lastnames',
-            'email',
-            'cuit',
-            'birthdate',
-            'address',
-            'cellphone'
-          ]"
         >
           <Column headerStyle="width: 3rem"></Column>
           <Column field="id" header="ID"></Column>

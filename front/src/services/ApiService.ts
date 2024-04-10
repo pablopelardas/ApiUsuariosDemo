@@ -27,4 +27,9 @@ export default class ApiService {
     const response = await axiosInstance.delete<User>(`/api/users/${id}`)
     return response.data
   }
+  async searchUsers(query: string) {
+    const response = await axiosInstance.get<User[]>(`/api/users/search/${query}`)
+    console.log(response.data)
+    return response.data
+  }
 }
